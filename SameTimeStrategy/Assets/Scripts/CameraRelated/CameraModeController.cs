@@ -86,4 +86,39 @@ public class CameraModeController : MonoBehaviour {
 
 
 	}
+
+    public void RegisterToEventsForMode(CameraControllMode mode, Action enter, Action exit)
+    {
+        switch(mode)
+        {
+            case CameraControllMode.Free:
+                OnFreeModeEnter += enter;
+                OnFreeModeExit += exit;
+                break;
+            case CameraControllMode.Static:
+                OnStaticModeEnter += enter;
+                OnStaticModeEnter += exit;
+                break;
+            default:
+                throw new Exception("Cannot register to non exitent mode");
+        }
+    }
+
+    public void UnRegisterFromEventsForMode(CameraControllMode mode, Action enter, Action exit)
+    {
+        switch (mode)
+        {
+            case CameraControllMode.Free:
+                OnFreeModeEnter -= enter;
+                OnFreeModeExit -= exit;
+                break;
+            case CameraControllMode.Static:
+                OnStaticModeEnter -= enter;
+                OnStaticModeEnter -= exit;
+                break;
+            default:
+                throw new Exception("Cannot register to non exitent mode");
+        }
+    }
+
 }

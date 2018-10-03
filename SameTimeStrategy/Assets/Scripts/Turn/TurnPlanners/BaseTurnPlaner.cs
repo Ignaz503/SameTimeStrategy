@@ -14,4 +14,8 @@ public abstract class BaseTurnPlaner : MonoBehaviour
 
     public abstract void Cancel();
 
+    public void Disable() { enabled = false; }
+
+    public void Enable() { enabled = true; }
+
 }

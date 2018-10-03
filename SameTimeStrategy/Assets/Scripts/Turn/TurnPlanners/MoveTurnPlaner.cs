@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MoveTurnPlaner : BaseTurnPlaner
 {
-    [SerializeField] Transform clickVisualizer;
-    [SerializeField] KeyCode clickKey;
+   
+    [SerializeField] KeyCode clickKey = KeyCode.Mouse0;
     [SerializeField] Camera raycastCamera;
 
     bool destinationHasBeenSet;
-    Vector3 destination;
+    NavMeshPath destination;
 
     public override void Cancel()
     {
@@ -29,11 +31,19 @@ public class MoveTurnPlaner : BaseTurnPlaner
 
     public override void OnDisable()
     {
-        clickVisualizer.gameObject.SetActive(false);
+
     }
 
     public override void OnEnable()
     {
+        //use to do setup beofre affected char is set
+        destination = new NavMeshPath();
+        raycastCamera = Camera.main;
+    }
+
+    private void Start()
+    {
+        //use to do setup after affected char is set
     }
 
     private void Update()
@@ -44,10 +54,13 @@ public class MoveTurnPlaner : BaseTurnPlaner
             RaycastHit hit;
             if (Physics.Raycast(r, out hit))
             {
-                destinationHasBeenSet = true;
-                destination = hit.point;
-                clickVisualizer.position = hit.point;
-                clickVisualizer.gameObject.SetActive(true);
+                destinationHasBeenSet = NavMesh.CalculatePath(AffectedCharacter.transform.position,hit.point,-1,destination);
+
+                AffectedCharacter.LineRenderer.positionCount = destination.corners.Length;
+
+                AffectedCharacter.LineRenderer.SetPositions(destination.corners);
+
+                AffectedCharacter.LineRenderer.enabled = true;
             }
         }
     }

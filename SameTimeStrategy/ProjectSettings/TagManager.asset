@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - AOEConeRadius
+  - AOEConeAngle
+  - AOEConeUI
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,8 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - Player
+  - Character
+  - Obstacle
   - 
   - 
   - 
@@ -35,8 +39,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Unselectable
   m_SortingLayers:
   - name: Default
     uniqueID: 0

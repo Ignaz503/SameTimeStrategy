@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class MoveAction : IAction
 {
     PlayerController controller;
-    public Vector3 Destination { get; set; }
+
     bool done = false;
     NavMeshPath path;
 
@@ -36,10 +36,9 @@ public class MoveAction : IAction
         }
     }
 
-    public MoveAction(Vector3 destination)
+    public MoveAction(NavMeshPath path)
     {
-        Destination = destination;
-        path = new NavMeshPath();   
+        this.path = path;
     }
 
     public void End()
@@ -50,6 +49,8 @@ public class MoveAction : IAction
         controller.Agent.isStopped = true;
         controller.Agent.ResetPath();
         controller.Agent.velocity = Vector3.zero;
+        controller.LineRenderer.positionCount = 0;
+        controller.LineRenderer.enabled = false;
     }
 
     public void Start(PlayerController c)
@@ -71,7 +72,7 @@ public class MoveAction : IAction
             return;
 
         //Debug.Log("Doing after pause check");
-
+       
         controller.LineRenderer.positionCount = controller.Agent.path.corners.Length;
 
         controller.LineRenderer.SetPositions(controller.Agent.path.corners);
@@ -99,25 +100,32 @@ public class MoveAction : IAction
 
     public void Unpause()
     {
-        Debug.Log("Unpuase");
+
         IsPaused = false;
 
-        controller.Character.enabled = true;
-        controller.Animator.enabled = true;
-        controller.Rigidbody.WakeUp();
         controller.Agent.isStopped = false;
+        controller.Rigidbody.WakeUp();
+        controller.Animator.enabled = true;
+        controller.Character.enabled = true;
     }
 
     public void Initialize(PlayerController c)
     {
         controller = c;
 
-        NavMesh.CalculatePath(controller.transform.position, Destination, -1, path);
+        //NavMesh.CalculatePath(controller.transform.position, Destination, -1, path);
 
-        controller.LineRenderer.positionCount = path.corners.Length;
+        //controller.LineRenderer.positionCount = path.corners.Length;
 
-        controller.LineRenderer.SetPositions(path.corners);
+        //controller.LineRenderer.SetPositions(path.corners);
 
         controller.LineRenderer.enabled = true;
+    }
+
+    public IAction Interrupt(IAction nextAction)
+    {
+        MoveFadeOutAction action =  new MoveFadeOutAction(nextAction);
+        action.Initialize(controller);
+        return action;
     }
 }

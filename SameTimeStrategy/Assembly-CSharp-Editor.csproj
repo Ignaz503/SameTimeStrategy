@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\FieldOfViewEditor.cs" />
     <Compile Include="Assets\Modern UI Pack\Editor\ModernUI.cs" />
     <Compile Include="Assets\NavMeshComponents\Editor\NavMeshComponentsGUIUtility.cs" />
     <Compile Include="Assets\NavMeshComponents\Editor\NavMeshLinkEditor.cs" />

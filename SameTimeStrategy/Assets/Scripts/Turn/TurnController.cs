@@ -49,6 +49,9 @@ public class TurnController : MonoBehaviour
 
     public Action OnExecutionPhaseStart;
     public Action OnPlanningPhaseStart;
+
+    public bool StartExecutionPhase { get; set; }
+
     /// <summary>
     /// func(oldPhase, newPhase)
     /// </summary>
@@ -88,12 +91,30 @@ public class TurnController : MonoBehaviour
             clockText.text = "0.00";
             Time.timeScale = PlannigPhaseTimeMultiplier;
         }
-        if (IsPlanningPhase && Input.GetKeyDown(nexTurnKey))
+        if (IsPlanningPhase && StartExecutionPhase)
         {
             currentTime = roundTime;
+            StartExecutionPhase = false;
             Time.timeScale = ExecutionTimeMultiplier;
             Phase = GamePhase.ExecutionPhase;
             OnExecutionPhaseStart?.Invoke();
         }// end if next turn key
     }
+
+    public void RegisterToEventForPhase(GamePhase phase, Action action)
+    {
+        switch (phase)
+        {
+            case GamePhase.ExecutionPhase:
+                OnExecutionPhaseStart += action;
+                break;
+            case GamePhase.PlanningPhase:
+                OnPlanningPhaseStart += action;
+                break;
+            default:
+                throw new Exception("Cann't register to non existant phase");
+                
+        }
+    }
+
 }

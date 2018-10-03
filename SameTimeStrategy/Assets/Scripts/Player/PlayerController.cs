@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
     public event Action Done;
 
-    [SerializeField] Camera cam;
-    public Camera Camera { get { return cam; } }
-
     [SerializeField] LineRenderer lineRenderer;
     public LineRenderer LineRenderer { get { return lineRenderer; } }
+
+    [SerializeField] Image rotationVisualizer;
+    public Image RotationVisualizer { get { return rotationVisualizer; } }
 
     [SerializeField] NavMeshAgent agent;
     public NavMeshAgent Agent { get { return agent; } }
@@ -31,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 
     [SerializeField] float possibleMovementDistance;
 
-    [SerializeField][Range(1,180)]int stepIncrease = 12;
+    [SerializeField] [Range(1, 180)] int stepIncrease = 12;
 
     IAction _Action;
     public IAction Action
@@ -41,17 +42,22 @@ public class PlayerController : MonoBehaviour {
         {
             if (_Action == null)
                 _Action = value;
-            else if (_Action.Interruptable)
+            else if(_Action.Done)
             {
-                _Action.End();// end previous action
+                if(!(_Action is FadeOutAction))_Action.End();// end previous action , if in here to avoid enless loop with fade action setting next action in End function
                 _Action = value;
             }
+            else if (_Action.Interruptable)
+            {
+                Debug.Log("Interrutp");
+                _Action = _Action.Interrupt(value);
+            }
             else
-                Debug.Log("Cannot interrupt current action");
+                Debug.Log("Cannot chage current action");
         }
     }
 
-    public List<string> PossibleActions;
+    public ActionPlannerInfo[] PossibleActions;
 
     private void Start()
     {
@@ -61,7 +67,8 @@ public class PlayerController : MonoBehaviour {
 
         turnController.OnExecutionPhaseStart += StartNextAction;
 
-        character.OnStopMoving += () => { Debug.Log("Done Moving"); };
+        //character.OnStopMoving += () => { Debug.Log("Done Moving"); };
+
 
     }
 
@@ -84,26 +91,22 @@ public class PlayerController : MonoBehaviour {
 
     void UpdatePlanningPhase()
     {
-        //For Testing
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Ray r = cam.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit hit;
-        //    if (Physics.Raycast(r, out hit))
-        //    {
-        //        // move
-        //        Action = new MoveAction(hit.point);
-        //        Action.Initialize(this);
-        //    }
-        //}
+
     }
 
     void UpdateExecutionPhase()
     {
-        if (Action != null && Action.IsPaused)
-            Action.Unpause();
-
-        Action?.Do();
+        if(Action != null)
+        {
+            if (Action.IsPaused)
+                Action.Unpause();
+            else if (Action.Done)
+            {
+                Action.End();
+                return;
+            }
+            Action?.Do();
+        }
     }
 
     void StartNextAction()
@@ -133,20 +136,22 @@ public class PlayerController : MonoBehaviour {
     {
         Gizmos.color = Color.cyan;
 
-        float rot = transform.eulerAngles.y;
+        //float rot = transform.eulerAngles.y;
 
-        for(float curRot = rot; curRot < rot +360; curRot+= stepIncrease)
-        {
-            float lerp = Mathf.InverseLerp(rot + 360, rot, curRot);
-            lerp = lerp < .5f ? 1.0f - lerp : lerp;
+        //for(float curRot = rot; curRot < rot +360; curRot+= stepIncrease)
+        //{
+        //    float lerp = Mathf.InverseLerp(rot + 360, rot, curRot);
+        //    lerp = lerp < .5f ? 1.0f - lerp : lerp;
 
-            float dist = possibleMovementDistance * lerp;
+        //    float dist = possibleMovementDistance * lerp;
 
-            Vector3 dir = new Vector3(Mathf.Sin(curRot*Mathf.Deg2Rad), 0, Mathf.Cos(curRot*Mathf.Deg2Rad)).normalized * dist;
+        //    Vector3 dir = new Vector3(Mathf.Sin(curRot*Mathf.Deg2Rad), 0, Mathf.Cos(curRot*Mathf.Deg2Rad)).normalized * dist;
 
-            Gizmos.DrawLine(transform.position, transform.position + dir);
+        //    Gizmos.DrawLine(transform.position, transform.position + dir);
 
-        }
-     
+        //}
+
+
+        Gizmos.DrawLine(transform.position, (transform.position + transform.forward));
     }
 }

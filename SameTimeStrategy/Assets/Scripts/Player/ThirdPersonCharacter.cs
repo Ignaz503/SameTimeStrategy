@@ -17,6 +17,8 @@ public class ThirdPersonCharacter : MonoBehaviour
 	[SerializeField] float m_StationaryTurnSpeed = 180;
     public float StationaryTurnSpeed { get { return m_StationaryTurnSpeed; } }
 	[SerializeField] float m_JumpPower = 6f;
+    [SerializeField] float slowDownRate = 20f;
+    public float SlowDownRate { get { return slowDownRate; } }
 	[Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;
 	[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
 	[SerializeField] float m_MoveSpeedMultiplier = 1f;
