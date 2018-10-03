@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\Turn\TurnPlanners\TurnPlannerController.cs" />
     <Compile Include="Assets\Scripts\Turn\TurnPlanners\WindBurstConeAOEPlanner.cs" />
     <Compile Include="Assets\Scripts\UI\RadialButtonLayout.cs" />
+    <Compile Include="Assets\Scripts\Utility\ChangeColorOnDamage.cs" />
     <Compile Include="Assets\Scripts\Utility\DestroyOnStart.cs" />
     <Compile Include="Assets\Scripts\Utility\ObstacleAnimation.cs" />
     <Compile Include="Assets\Scripts\Utility\PlaceUIOnScreenBasedOnWorldSpaceTransform.cs" />
@@ -132,16 +133,16 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>D:/unity/SameTimeStrategy/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>D:/unity/SameTimeGit/SameTimeStrategy/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/unity/SameTimeStrategy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/unity/SameTimeGit/SameTimeStrategy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/unity/SameTimeStrategy/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/unity/SameTimeGit/SameTimeStrategy/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/unity/SameTimeStrategy/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/unity/SameTimeGit/SameTimeStrategy/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Neuer Ordner/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

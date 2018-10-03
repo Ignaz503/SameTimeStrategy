@@ -47,8 +47,6 @@ public class WindBurstConeAOEPlanner : BaseTurnPlaner
         {
             float dmg = CalcDamage();
 
-            Debug.Log(dmg);
-
             AffectedCharacter.Action = new WindBurstConeAttack(angleInDegree, radius,dmg , obstacleMask);
             AffectedCharacter.Action.Initialize(AffectedCharacter);
             return true;
@@ -63,8 +61,8 @@ public class WindBurstConeAOEPlanner : BaseTurnPlaner
 
     public override void OnEnable()
     {
-        angleInDegree = defaultAngleInDegree;
-        radius = defaulRadius;
+        //angleInDegree = defaultAngleInDegree;
+        //radius = defaulRadius;
         ui?.SetActive(true);
     }
 
