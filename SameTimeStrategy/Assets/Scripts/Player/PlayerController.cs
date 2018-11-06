@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public ActionPlannerInfo[] PossibleActions;
+    public ActionInfo[] PossibleActions;
 
     private void Start()
     {
@@ -96,17 +96,7 @@ public class PlayerController : MonoBehaviour {
 
     void UpdateExecutionPhase()
     {
-        if(Action != null)
-        {
-            if (Action.IsPaused)
-                Action.Unpause();
-            else if (Action.Done)
-            {
-                Action.End();
-                return;
-            }
-            Action?.Do();
-        }
+        Action?.Do();
     }
 
     void StartNextAction()

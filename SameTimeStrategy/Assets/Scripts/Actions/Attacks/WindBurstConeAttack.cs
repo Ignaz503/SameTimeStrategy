@@ -20,7 +20,7 @@ public class WindBurstConeAttack : ConeAOEAttack
         //instant
 
         //all targets collision inside radius
-        Collider[] colliders = Physics.OverlapSphere(attackingCharacter.transform.position, distance);
+        Collider[] colliders = Physics.OverlapSphere(attackingCharacter.transform.position, distance+.5f);
 
         for (int i = 0; i < colliders.Length; i++)
         {
@@ -37,7 +37,10 @@ public class WindBurstConeAttack : ConeAOEAttack
             {
                 float distToTarget = Vector3.Distance(attackingCharacter.transform.position, target.position);
 
-                if (!Physics.Raycast(attackingCharacter.transform.position, dirToTarget, distToTarget, obstacleMask))
+                Vector3 pos = attackingCharacter.transform.position;
+                pos.y = attackingCharacter.transform.TransformPoint(Vector3.up * .5f).y;
+
+                if (!Physics.Raycast(pos, dirToTarget, distToTarget, obstacleMask))
                 {
                     //no obstale can see target
                     //damage

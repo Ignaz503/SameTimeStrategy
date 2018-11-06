@@ -1,19 +1,21 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Utility;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Characters.FirstPerson;
-using UnityStandardAssets.Utility;
-using Random = UnityEngine.Random;
 
-public class SixDegreeofMovementCharacterController : MonoBehaviour
-{
+public class PlayerFreeMove : MonoBehaviour {
+
     [SerializeField] private bool m_IsWalking;
     [SerializeField] private float m_WalkSpeed;
     [SerializeField] private float m_RunSpeed;
 
+    [SerializeField] Vector2 yClampValues;
+
     [SerializeField] private MouseLook m_MouseLook;
 
-    [SerializeField] KeyCode IncreaseY;
+    [SerializeField] KeyCode IncreaseY = KeyCode.LeftControl;
     [SerializeField] KeyCode runKey = KeyCode.LeftShift;
 
     [SerializeField] TurnController turnController;
@@ -22,37 +24,29 @@ public class SixDegreeofMovementCharacterController : MonoBehaviour
 
     private Vector2 m_Input;
     private Vector3 m_MoveDir = Vector3.zero;
-    private CharacterController m_CharacterController;
-    private CollisionFlags m_CollisionFlags;
+    Vector3 vel;
 
     // Use this for initialization
-    private void Start()
+    void Start ()
     {
-        
-        m_CharacterController = GetComponent<CharacterController>();
-
         m_Camera = Camera.main;
-
-        m_CharacterController.detectCollisions = false;
 
         transform.eulerAngles = Vector3.zero;
         m_MouseLook.Init(transform, m_Camera.transform);
 
-        CameraModeController.Instance.OnFreeModeExit += () => m_Camera.transform.localEulerAngles = Vector3.zero; 
+        CameraModeController.Instance.OnFreeModeExit += () => m_Camera.transform.localEulerAngles = Vector3.zero;
         CameraModeController.Instance.OnFreeModeExit += () => m_MouseLook.SetCursorLock(false);
         CameraModeController.Instance.OnStaticModeExit += () => m_MouseLook.SetCursorLock(true);
-
     }
-
-    // Update is called once per frame
-    private void Update()
-    {
+	
+	// Update is called once per frame
+	void Update () {
         RotateView();
-        // the jump state needs to read here to make sure it is not missed
+        Move();
     }
 
 
-    private void FixedUpdate()
+    private void Move()
     {
         float speed;
         GetInput(out speed);
@@ -65,18 +59,22 @@ public class SixDegreeofMovementCharacterController : MonoBehaviour
 
         m_MoveDir = desiredMove * speed;
 
-
-        m_CollisionFlags = m_CharacterController.Move(m_MoveDir * Time.deltaTime);
+        transform.position += m_MoveDir * Time.unscaledDeltaTime; 
 
         m_MouseLook.UpdateCursorLock();
+
     }
 
+    private void LateUpdate()
+    {
+        //TODO y clamp   
+    }
 
     private void GetInput(out float speed)
     {
         // Read input
-        float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-        float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+        float horizontal = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+        float vertical = CrossPlatformInputManager.GetAxisRaw("Vertical");
 
         bool waswalking = m_IsWalking;
 
@@ -88,9 +86,8 @@ public class SixDegreeofMovementCharacterController : MonoBehaviour
         // set the desired speed to be walking or running
         speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
         m_Input = new Vector2(horizontal, vertical);
-
-        if (Time.timeScale == 0f)
-            Debug.Log(m_Input);
+        if(Time.timeScale == 0f)
+            Debug.Log($"input: {m_Input}");
 
         // normalize input if it exceeds 1 in combined length:
         if (m_Input.sqrMagnitude > 1)
@@ -102,13 +99,13 @@ public class SixDegreeofMovementCharacterController : MonoBehaviour
 
     private void OnEnable()
     {
-        if(m_Camera != null)
+        if (m_Camera != null)
         {
             transform.eulerAngles = Vector3.zero;
             m_MouseLook.Init(transform, m_Camera.transform);
         }
 
-        
+
     }
 
     private void RotateView()
@@ -116,19 +113,5 @@ public class SixDegreeofMovementCharacterController : MonoBehaviour
         m_MouseLook.LookRotation(transform, m_Camera.transform);
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        //Rigidbody body = hit.collider.attachedRigidbody;
-        ////dont move the rigidbody if the character is on top of it
-        //if (m_CollisionFlags == CollisionFlags.Below)
-        //{
-        //    return;
-        //}
 
-        //if (body == null || body.isKinematic)
-        //{
-        //    return;
-        //}
-        //body.AddForceAtPosition(m_CharacterController.velocity * 0.1f, hit.point, ForceMode.Impulse);
-    }
 }

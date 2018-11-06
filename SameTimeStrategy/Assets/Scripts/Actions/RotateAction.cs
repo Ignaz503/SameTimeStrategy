@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RotateAction : IAction
 {
@@ -8,7 +9,7 @@ public class RotateAction : IAction
     Vector3 rotateDir;
     float speed;
     float t = 0;
-    bool done = false;
+
     PlayerController character;
 
 
@@ -23,9 +24,9 @@ public class RotateAction : IAction
 
     public bool DontEndOnPhaseSwitch => true;
 
-    public bool Done { get { return done; } }
-
     public bool Interruptable => true;
+
+    public bool Done { get; protected set; }
 
     public void Do()
     {
@@ -34,7 +35,7 @@ public class RotateAction : IAction
 
         t += Time.deltaTime * speed;
         if (t >= 1f)
-            done = true;
+            Done = true;
         else
             character.Character.Rotate(Vector3.Lerp(character.transform.eulerAngles,rotateDir,t));
     }
@@ -48,6 +49,7 @@ public class RotateAction : IAction
         character.Agent.isStopped = true;
         character.Agent.ResetPath();
         character.Agent.velocity = Vector3.zero;
+
     }
 
     public void Initialize(PlayerController c)
@@ -65,11 +67,7 @@ public class RotateAction : IAction
     public void Pause()
     {
         IsPaused = true;
-        Debug.Log("Rotation Pause");
-        character.Agent.isStopped = true;
-        character.Rigidbody.WakeUp();
-        character.Animator.enabled = false;
-        character.Character.enabled = false;
+
     }
 
     public void Start(PlayerController c)
@@ -80,10 +78,5 @@ public class RotateAction : IAction
     public void Unpause()
     {
         IsPaused = false;
-        Debug.Log("Rotation Pause");
-        character.Agent.isStopped = false;
-        character.Rigidbody.WakeUp();
-        character.Animator.enabled = true;
-        character.Character.enabled = true;
     }
 }

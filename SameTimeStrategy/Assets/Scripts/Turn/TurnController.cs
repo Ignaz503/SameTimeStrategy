@@ -17,7 +17,7 @@ public class TurnController : MonoBehaviour
     [SerializeField] KeyCode nexTurnKey = KeyCode.Space;
     float currentTime = 0f;
 
-    [SerializeField]float plannigPhaseTimeMultiplier = 1f;
+    [SerializeField]float plannigPhaseTimeMultiplier = 0f;
     public float PlannigPhaseTimeMultiplier { get { return plannigPhaseTimeMultiplier; } }
 
     [SerializeField] float executionTimeMultiplier = 1f;

@@ -25,7 +25,7 @@ public class CameraModeController : MonoBehaviour {
     [SerializeField] GameObject crossHair;
 
     [SerializeField] StaticCameraController staticController;
-    [SerializeField] SixDegreeofMovementCharacterController freeController;
+    [SerializeField] PlayerFreeMove freeController;
 
     CameraControllMode _CurrentMode;
     public CameraControllMode CurrentMode

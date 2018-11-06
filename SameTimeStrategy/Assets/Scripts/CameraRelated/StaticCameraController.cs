@@ -111,9 +111,9 @@ public class StaticCameraController : MonoBehaviour {
 
     private void LateUpdate()
     {
-        cameraToControll.transform.position = Vector3.SmoothDamp(cameraToControll.transform.position, currentTarget.Position, ref velPos, movementSmoothtime);
-
-        cameraToControll.transform.rotation = Quaternion.RotateTowards(cameraToControll.transform.rotation, Quaternion.Euler(currentTarget.Rotation), rotationSmoothtime * Time.deltaTime);
+        cameraToControll.transform.position = Vector3.SmoothDamp(cameraToControll.transform.position, currentTarget.Position, ref velPos, movementSmoothtime,20f,Time.unscaledDeltaTime);
+        
+        cameraToControll.transform.rotation = Quaternion.RotateTowards(cameraToControll.transform.rotation, Quaternion.Euler(currentTarget.Rotation), rotationSmoothtime * Time.unscaledDeltaTime);
     }
 
 

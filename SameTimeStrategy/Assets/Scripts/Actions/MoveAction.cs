@@ -91,22 +91,12 @@ public class MoveAction : IAction
     {
         //Debug.Log("Unpuase");
         IsPaused = true;
-
-        controller.Character.enabled = false;
-        controller.Animator.enabled = false;
-        controller.Rigidbody.Sleep();
-        controller.Agent.isStopped = true;
     }
 
     public void Unpause()
     {
 
         IsPaused = false;
-
-        controller.Agent.isStopped = false;
-        controller.Rigidbody.WakeUp();
-        controller.Animator.enabled = true;
-        controller.Character.enabled = true;
     }
 
     public void Initialize(PlayerController c)
@@ -123,8 +113,8 @@ public class MoveAction : IAction
     }
 
     public IAction Interrupt(IAction nextAction)
-    {
-        MoveFadeOutAction action =  new MoveFadeOutAction(nextAction);
+    { 
+        MoveFadeOutAction action = new MoveFadeOutAction(nextAction);
         action.Initialize(controller);
         return action;
     }

@@ -33,8 +33,11 @@ public class WindBurstConeAOEPlanner : BaseTurnPlaner
     Vector3 dragEndPos;
 
     GameObject ui;
-    GameObject angleSlider;
-    GameObject radiusSlider;
+    GameObject angleSliderObject;
+    GameObject radiusSliderObject;
+
+    Slider angleSlider;
+    Slider radiusSlider;
 
     public override void Cancel()
     {
@@ -61,8 +64,11 @@ public class WindBurstConeAOEPlanner : BaseTurnPlaner
 
     public override void OnEnable()
     {
-        //angleInDegree = defaultAngleInDegree;
-        //radius = defaulRadius;
+        if(angleSlider != null)
+            SetAngleSlider();
+        if(radiusSlider != null)
+            SetRadiusSlider();
+
         ui?.SetActive(true);
     }
 
@@ -79,35 +85,32 @@ public class WindBurstConeAOEPlanner : BaseTurnPlaner
     private void Start()
     {
         ui = GameObject.FindGameObjectWithTag("AOEConeUI");
-        angleSlider = ui.transform.GetChild(1).gameObject;
-        radiusSlider = ui.transform.GetChild(3).gameObject;
+        angleSliderObject = ui.transform.GetChild(1).gameObject;
+        radiusSliderObject = ui.transform.GetChild(3).gameObject;
         ui.transform.GetChild(0).gameObject.SetActive(true);
         ui.transform.GetChild(2).gameObject.SetActive(true);
 
-        angleSlider.SetActive(true);
-        radiusSlider.SetActive(true);
+        angleSliderObject.SetActive(true);
+        radiusSliderObject.SetActive(true);
 
-        if (angleSlider == null)
+        if (angleSliderObject == null)
             Debug.Log("what");
 
-        Slider angSlider = angleSlider.GetComponent<Slider>();
+        angleSlider = angleSliderObject.GetComponent<Slider>();
 
-        angSlider.minValue = minAngleInDegree;
-        angSlider.maxValue = maxAngleInDegree;
+        SetAngleSlider();
 
-        angSlider.value = defaultAngleInDegree;
+        angleSlider.onValueChanged.AddListener((val) => { angleInDegree = val; Debug.Log(CalcDamage()); });
 
-        angSlider.onValueChanged.AddListener((val) => { angleInDegree = val; Debug.Log(CalcDamage()); });
+        radiusSlider = radiusSliderObject.GetComponent<Slider>();
 
-        Slider radSlider = radiusSlider.GetComponent<Slider>();
+        SetRadiusSlider();
 
-        radSlider.minValue = minRadius;
-        radSlider.maxValue = maxRadius;
+        radiusSlider.onValueChanged.AddListener((val) => { radius = val;});
 
-        radSlider.value = defaulRadius;
-
-        radSlider.onValueChanged.AddListener((val) => { radius = val; Debug.Log(CalcDamage()); });
-                     
+        //default
+        angleInDegree = defaultAngleInDegree;
+        radius = defaulRadius;
     }
     private void OnDrawGizmos()
     {
@@ -129,6 +132,23 @@ public class WindBurstConeAOEPlanner : BaseTurnPlaner
             angleInDegrees += transform.eulerAngles.y;
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0f, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+
+
+    void SetRadiusSlider()
+    {
+        radiusSlider.minValue = minRadius;
+        radiusSlider.maxValue = maxRadius;
+
+        radiusSlider.value = defaulRadius;
+    }
+
+    void SetAngleSlider()
+    {
+        angleSlider.minValue = minAngleInDegree;
+        angleSlider.maxValue = maxAngleInDegree;
+
+        angleSlider.value = defaultAngleInDegree;
     }
 
 }
